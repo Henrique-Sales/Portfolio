@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henrique Medeiros - Especialista em Dados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.8);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border-color: rgba(99, 102, 241, 0.2);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --border-color: rgba(99, 102, 241, 0.1);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shape {
+            position: absolute;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: 5s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; top: 80%; left: 20%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(15px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .theme-toggle::before {
+            transform: translateX(28px);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 30px 60px rgba(99, 102, 241, 0.3);
+        }
+
+        .name {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.6)); }
+        }
+
+        .title {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gradient-3);
+            border-radius: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 35px 80px rgba(99, 102, 241, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 30px;
+            height: 30px;
+            background: var(--gradient-2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skill-item:hover {
+            background: var(--primary-color);
+            transform: translateX(10px);
+        }
+
+        .skill-bar {
+            width: 100px;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--gradient-3);
+            border-radius: 4px;
+            transition: width 2s ease;
+            animation: progressLoad 2s ease-out forwards;
+        }
+
+        @keyframes progressLoad {
+            from { width: 0; }
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(15px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-company {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .full-width-card {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .achievement-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-10px);
+            background: var(--primary-color);
+        }
+
+        .achievement-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-item:hover {
+            background: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .name {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+
+    <div class="theme-toggle" onclick="toggleTheme()"></div>
+
+    <div class="container">
+        <header class="header fade-in">
+            <div class="profile-image">
+                👨‍💻
+            </div>
+            <h1 class="name">HENRIQUE MEDEIROS</h1>
+            <p class="title">Especialista em Dados • Python • Power BI • Automação</p>
+        </header>
+
+        <div class="grid">
+            <aside class="fade-in stagger-1">
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="icon">🛠️</span>
+                        Habilidades
+                    </h2>
+                    <div class="skills-grid">
+                        <div class="skill-item" onclick="animateSkill(this)">
+                            <span>Python</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" onclick="animateSkill(this)">
+                            <span>Power BI</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" onclick="animateSkill(this)">
+                            <span>SQL</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" onclick="animateSkill(this)">
+                            <span>MySQL</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" onclick="animateSkill(this)">
+                            <span>Docker</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" onclick="animateSkill(this)">
+                            <span>Git/GitHub</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <h2 class="card-title">
+                        <span class="icon">📚</span>
+                        Formação
+                    </h2>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2020 - 2023</div>
+                        <div class="timeline-title">Análise e Desenvolvimento de Sistemas</div>
+                        <div class="timeline-company">Universidade Nove de Julho</div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="fade-in stagger-2">
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="icon">💼</span>
+                        Experiência Profissional
+                    </h2>
+                    <div class="timeline">
+                        <div class="timeline-item" onclick="expandItem(this)">
+                            <div class="timeline-date">Jul 2024 - Atual</div>
+                            <div class="timeline-title">Analista de Monitoramento Sênior</div>
+                            <div class="timeline-company">ANJUN EXPRESS • Perus, SP</div>
+                            <ul style="margin-top: 1rem; padding-left: 1rem;">
+                                <li>Desenvolvimento de dashboards interativos no Power BI</li>
+                                <li>Automação de processos com Python e Power BI</li>
+                                <li>Gestão de bancos de dados MySQL</li>
+                                <li>Sistemas de faturamento automatizado</li>
+                            </ul>
+                        </div>
+
+                        <div class="timeline-item" onclick="expandItem(this)">
+                            <div class="timeline-date">Out 2023 - Jul 2024</div>
+                            <div class="timeline-title">Analyst</div>
+                            <div class="timeline-company">SHOPEE • São Paulo, SP</div>
+                            <ul style="margin-top: 1rem; padding-left: 1rem;">
+                                <li>Desenvolvimento de ferramentas de análise</li>
+                                <li>Criação de soluções de software</li>
+                                <li>Avaliação de performance de sistemas</li>
+                                <li>+20% ganho em eficiência operacional</li>
+                            </ul>
+                        </div>
+
+                        <div class="timeline-item" onclick="expandItem(this)">
+                            <div class="timeline-date">Mai 2022 - Out 2023</div>
+                            <div class="timeline-title">Analista Jr</div>
+                            <div class="timeline-company">SEQUOIA LOGÍSTICA • Embu das Artes, SP</div>
+                            <ul style="margin-top: 1rem; padding-left: 1rem;">
+                                <li>Dashboards e automações em Python</li>
+                                <li>Análise de dados para tomada de decisão</li>
+                                <li>Relatórios gerenciais</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div class="full-width-card fade-in stagger-3">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="icon">🏆</span>
+                    Principais Conquistas
+                </h2>
+                <div class="achievements-grid">
+                    <div class="achievement-card" onclick="pulseCard(this)">
+                        <span class="achievement-number">+20%</span>
+                        <p>Ganho em Eficiência Operacional</p>
+                    </div>
+                    <div class="achievement-card" onclick="pulseCard(this)">
+                        <span class="achievement-number">100%</span>
+                        <p>Automação de Faturamento</p>
+                    </div>
+                    <div class="achievement-card" onclick="pulseCard(this)">
+                        <span class="achievement-number">P90</span>
+                        <p>Monitoramento em Tempo Real</p>
+                    </div>
+                    <div class="achievement-card" onclick="pulseCard(this)">
+                        <span class="achievement-number">MySQL</span>
+                        <p>Grandes Volumes de Dados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="full-width-card fade-in stagger-4">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="icon">📞</span>
+                    Contato
+                </h2>
+                <div class="contact-info">
+                    <a href="mailto:henri-143@hotmail.com" class="contact-item">
+                        <span class="icon">📧</span>
+                        <div>
+                            <strong>Email</strong>
+                            <p>henri-143@hotmail.com</p>
+                        </div>
+                    </a>
+                    <a href="tel:11949339221" class="contact-item">
+                        <span class="icon">📱</span>
+                        <div>
+                            <strong>Telefone</strong>
+                            <p>(11) 94933-9221</p>
+                        </div>
+                    </a>
+                    <a href="https://linkedin.com/in/henriquesmedeiros" class="contact-item">
+                        <span class="icon">💼</span>
+                        <div>
+                            <strong>LinkedIn</strong>
+                            <p>henriquesmedeiros</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/Henrique-Sales" class="contact-item">
+                        <span class="icon">💻</span>
+                        <div>
+                            <strong>GitHub</strong>
+                            <p>Henrique-Sales</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-action" onclick="scrollToTop()">
+        ↑
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+        }
+
+        function animateSkill(element) {
+            element.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                element.style.transform = 'translateX(10px)';
+            }, 200);
+        }
+
+        function expandItem(element) {
+            element.style.transform = 'translateX(25px) scale(1.02)';
+            element.style.boxShadow = '0 20px 40px rgba(99, 102, 241, 0.3)';
+            setTimeout(() => {
+                element.style.transform = 'translateX(15px)';
+                element.style.boxShadow = '0 15px 30px rgba(99, 102, 241, 0.2)';
+            }, 300);
+        }
+
+        function pulseCard(element) {
+            element.style.transform = 'scale(1.1)';
+            element.style.background = 'var(--gradient-2)';
+            setTimeout(() => {
+                element.style.transform = 'translateY(-10px)';
+                element.style.background = 'var(--primary-color)';
+            }, 200);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                shape.style.transform = `translate(${x * speed * 50}px, ${y * speed * 50}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
